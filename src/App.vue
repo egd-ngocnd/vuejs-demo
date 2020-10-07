@@ -3,7 +3,8 @@
     <button v-on:click="add">Add</button>
     <button v-on:click="remove">Remove</button>
     <button v-on:click="randomAdd">RandomAdd</button>
-    <button v-on:click="sort">Bubble Sort</button>
+    <button v-on:click="sort(1)">Bubble Sort</button>
+    <button v-on:click="sort(2)">Selection Sort</button>
     <transition-group name="list" tag="p">
       <p
         v-for="item in items"
@@ -40,12 +41,12 @@ export default {
       var that = this;
       var evtInterval = setInterval(function () {
         that.items.splice(that.randomIndex(), 0, that.nextNum++);
-        if (that.items.length > 12) {
+        if (that.items.length === 10) {
           clearInterval(evtInterval);
         }
       }, 1000);
     },
-    sort: function () {
+    sort: function (intType) {
       var that = this;
       async function BubbleSort() {
         var i, j;
@@ -76,7 +77,47 @@ export default {
           alert("END");
         }, 500);
       }
-      BubbleSort();
+      async function SelectionSort() {
+        var i, j;
+        var min_idx = 0;
+        var n = that.items.length;
+        alert("START");
+        for (i = 0; i < n - 1; i++) {
+          min_idx = i;
+          for (j = i + 1; j < n; j++) {
+            if (that.items[min_idx] > that.items[j]) {
+              min_idx = j;
+            }
+          }
+          if (min_idx === i) {
+            continue;
+          }
+          var a, b;
+          a = that.items[i];
+          b = that.items[min_idx];
+          let promise = new Promise((resolve, reject) => {
+            setTimeout(function () {
+              that.items.splice(i, 1);
+              that.items.splice(min_idx - 1, 1);
+            }, 500);
+            setTimeout(function () {
+              that.items.splice(i, 0, b);
+              that.items.splice(min_idx, 0, a);
+              resolve("done2");
+            }, 1000);
+          });
+          await promise;
+        }
+        setTimeout(function () {
+          alert("END");
+        }, 500);
+      }
+      if (intType === 1) {
+        BubbleSort();
+      }
+      if (intType === 2) {
+        SelectionSort();
+      }
     },
   },
 };
