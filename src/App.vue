@@ -43,35 +43,40 @@ export default {
         if (that.items.length > 12) {
           clearInterval(evtInterval);
         }
-      }, 800);
+      }, 1000);
     },
     sort: function () {
       var that = this;
-      var i, j;
-      var n = this.items.length;
-      alert("START");
-      var evtInterval = setInterval(function () {
+      async function BubbleSort() {
+        var i, j;
+        var n = that.items.length;
+        alert("START");
         for (i = 0; i < n - 1; i++) {
           for (j = 0; j < n - i - 1; j++) {
             if (that.items[j] > that.items[j + 1]) {
               var a, b;
-              setTimeout(function () {
-                a = that.items[j];
-                b = that.items[j + 1];
-                that.items.splice(j, 1);
-                that.items.splice(j, 1);
-              }, 0);
-              setTimeout(function () {
-                that.items.splice(j, 0, b);
-                that.items.splice(j + 1, 0, a);
-              }, 800);
-              return;
+              a = that.items[j];
+              b = that.items[j + 1];
+              let promise1 = new Promise((resolve, reject) => {
+                setTimeout(function () {
+                  that.items.splice(j, 1);
+                  that.items.splice(j, 1);
+                }, 500);
+                setTimeout(function () {
+                  that.items.splice(j, 0, b);
+                  that.items.splice(j + 1, 0, a);
+                  resolve("done2");
+                }, 1000);
+              });
+              await promise1;
             }
           }
         }
-        alert("END");
-        clearInterval(evtInterval);
-      }, 1600);
+        setTimeout(function () {
+          alert("END");
+        }, 500);
+      }
+      BubbleSort();
     },
   },
 };
@@ -91,7 +96,7 @@ export default {
 }
 .list-enter-active,
 .list-leave-active {
-  transition: all 1s;
+  transition: all 1000ms;
 }
 .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
   opacity: 0;
