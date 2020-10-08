@@ -10,13 +10,40 @@
             Navigation
           </md-toolbar>
           <md-list>
-              <md-list-item to="/"><router-link to="/" tag="li" active-class="active" exact>Basic Sorting</router-link></md-list-item>
-              <md-list-item to="/menu2"><router-link to="/menu2" tag="li" active-class="active">Sorting 2</router-link></md-list-item>
-              <md-list-item to="/menu3"><router-link to="/menu3" tag="li" active-class="active">Menu 3</router-link></md-list-item>
-              <md-list-item to="/menu4"><router-link to="/menu4" tag="li" active-class="active">Menu 4</router-link></md-list-item>
-              <md-list-item tag="li" active-class="active"><iframe src="https://www.facebook.com/plugins/share_button.php?href=https://egd-ngocnd.github.io/vuejs-demo"
-    width="119" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"
-    allow="encrypted-media"></iframe></md-list-item>
+            <md-list-item to="/"
+              ><router-link to="/" tag="li" active-class="active" exact
+                >Basic Sorting</router-link
+              ></md-list-item
+            >
+            <md-list-item to="/menu2"
+              ><router-link to="/menu2" tag="li" active-class="active"
+                >Sorting 2</router-link
+              ></md-list-item
+            >
+            <md-list-item to="/menu3"
+              ><router-link to="/menu3" tag="li" active-class="active"
+                >Menu 3</router-link
+              ></md-list-item
+            >
+            <md-list-item to="/menu4"
+              ><router-link to="/menu4" tag="li" active-class="active"
+                >Menu 4</router-link
+              ></md-list-item
+            >
+            <md-list-item tag="li" active-class="active"
+              ><iframe
+                src="https://www.facebook.com/plugins/share_button.php?href=https://egd-ngocnd.github.io/vuejs-demo"
+                width="119"
+                height="20"
+                style="border: none; overflow: hidden"
+                scrolling="no"
+                frameborder="0"
+                allowTransparency="true"
+                allow="encrypted-media"
+              ></iframe
+            ></md-list-item>
+            <md-list-item><a href="https://github.com/egd-ngocnd/vuejs-demo" target="_blank">Github Reponsitory</a></md-list-item
+            >
           </md-list>
         </md-app-drawer>
         <md-app-content>
@@ -30,8 +57,7 @@
 <script>
 export default {
   name: "App",
-  components: {
-  },
+  components: {},
   data() {
     return {
       isLoading: false,
@@ -56,5 +82,4 @@ export default {
   width: 230px;
   max-width: calc(100vw - 125px);
 }
-
 </style>
