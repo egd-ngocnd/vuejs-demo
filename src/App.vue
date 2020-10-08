@@ -1,10 +1,13 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
 <template>
   <div id="app">
-    <button v-on:click="add">Add</button>
-    <button v-on:click="remove">Remove</button>
-    <button v-on:click="randomAdd">RandomAdd</button>
-    <button v-on:click="sort(1)">Bubble Sort</button>
-    <button v-on:click="sort(2)">Selection Sort</button>
+    <div>
+      <button :disabled="isLock" v-on:click="add">Add</button>
+      <button :disabled="isLock" v-on:click="remove">Remove</button>
+      <button :disabled="isLock" v-on:click="randomAdd">RandomAdd</button>
+      <button :disabled="isLock" v-on:click="sort(1)">Bubble Sort</button>
+      <button :disabled="isLock" v-on:click="sort(2)">Selection Sort</button>
+    </div>
     <transition-group name="list" tag="p">
       <p
         v-for="item in items"
@@ -25,7 +28,8 @@ export default {
     return {
       items: [1, 2, 3, 4, 5],
       nextNum: 6,
-      intDelay:1000
+      intDelay: 1000,
+      isLock:false,
     };
   },
   methods: {
@@ -40,12 +44,20 @@ export default {
     },
     randomAdd: function () {
       var that = this;
-      var evtInterval = setInterval(function () {
-        that.items.splice(that.randomIndex(), 0, that.nextNum++);
-        if (that.items.length === 10) {
-          clearInterval(evtInterval);
+      async function bulkAdd(){
+        that.isLock = true;
+        for(let idx = 0; idx < 5;idx++){
+          let promise = new Promise((resolve) => {
+            setTimeout(function () {
+              that.items.splice(that.randomIndex(), 0, that.nextNum++);
+              resolve("done");
+            }, that.intDelay);
+          });
+          await promise;
         }
-      }, 1000);
+        that.isLock = false;
+      }
+      bulkAdd();
     },
     sort: function (intType) {
       var that = this;
@@ -54,6 +66,7 @@ export default {
         var i, j;
         var n = that.items.length;
         alert("START");
+        that.isLock = true;
         for (i = 0; i < n - 1; i++) {
           for (j = 0; j < n - i - 1; j++) {
             if (that.items[j] > that.items[j + 1]) {
@@ -64,7 +77,7 @@ export default {
                 setTimeout(function () {
                   that.items.splice(j, 1);
                   that.items.splice(j, 1);
-                }, intDelay/2);
+                }, intDelay / 2);
                 setTimeout(function () {
                   that.items.splice(j, 0, b);
                   that.items.splice(j + 1, 0, a);
@@ -77,13 +90,15 @@ export default {
         }
         setTimeout(function () {
           alert("END");
-        }, intDelay/2);
+          that.isLock = false;
+        }, intDelay / 2);
       }
       async function SelectionSort() {
         var i, j;
         var min_idx = 0;
         var n = that.items.length;
         alert("START");
+        that.isLock = true;
         for (i = 0; i < n - 1; i++) {
           min_idx = i;
           for (j = i + 1; j < n; j++) {
@@ -101,7 +116,7 @@ export default {
             setTimeout(function () {
               that.items.splice(min_idx, 1);
               that.items.splice(i, 1);
-            }, intDelay/2);
+            }, intDelay / 2);
             setTimeout(function () {
               that.items.splice(i, 0, b);
               that.items.splice(min_idx, 0, a);
@@ -112,11 +127,15 @@ export default {
         }
         setTimeout(function () {
           alert("END");
-        }, intDelay/2);
+          that.isLock = false;
+        }, intDelay / 2);
       }
-      switch(intType){
+      switch (intType) {
         case 1:
           BubbleSort();
+          break;
+        case 2:
+          SelectionSort();
           break;
         case 2:
           SelectionSort();
@@ -134,6 +153,7 @@ export default {
   vertical-align: top;
   height: auto;
 }
+
 .list-item {
   display: inline-block;
   margin-right: 10px;
@@ -141,11 +161,16 @@ export default {
   width: 25px;
   text-align: center;
 }
+
 .list-enter-active,
 .list-leave-active {
   transition: all 1000ms;
 }
-.list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+
+.list-enter,
+.list-leave-to
+
+/* .list-leave-active below version 2.1.8 */ {
   opacity: 0;
   transform: translateY(30px);
 }
