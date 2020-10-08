@@ -4,14 +4,12 @@
     <div class="page-container">
       <md-app md-waterfall md-mode="fixed">
         <md-app-toolbar class="md-primary">
-          <span class="md-title">My Title</span>
+          <span class="md-title">Basic Sorting Algorithms</span>
         </md-app-toolbar>
-
         <md-app-drawer md-permanent="full">
           <md-toolbar class="md-transparent" md-elevation="0">
             Navigation
           </md-toolbar>
-
           <md-list>
             <md-list-item>
               <md-icon>move_to_inbox</md-icon>
@@ -34,7 +32,6 @@
             </md-list-item>
           </md-list>
         </md-app-drawer>
-
         <md-app-content>
           <div class="button">
             <md-button
@@ -67,19 +64,19 @@
               v-on:click="sort(2)"
               >Selection Sort</md-button
             >
-          <div v-show="checkLock">
-            <md-progress-bar md-mode="indeterminate"></md-progress-bar>
+            <div v-show="checkLock">
+              <md-progress-bar md-mode="indeterminate"></md-progress-bar>
+            </div>
           </div>
-          </div>
-          <transition-group name="list" tag="p">
-            <p
+          <transition-group name="list" tag="ul">
+            <li
               v-for="item in items"
               v-bind:key="item"
               class="list-item"
               v-bind:style="{ height: 20 * item + 'px' }"
             >
               {{ item }}
-            </p>
+            </li>
           </transition-group>
         </md-app-content>
       </md-app>
@@ -108,6 +105,9 @@ export default {
       return Math.floor(Math.random() * this.items.length);
     },
     add: function () {
+      if(this.items.length > 20){
+        return;
+      }
       this.isLock = true;
       this.items.splice(this.randomIndex(), 0, this.nextNum++);
       this.isLock = false;
@@ -118,6 +118,9 @@ export default {
       this.isLock = false;
     },
     randomAdd: function () {
+      if(this.items.length > 15){
+        return;
+      }
       var that = this;
       async function bulkAdd() {
         that.isLock = true;
@@ -222,23 +225,32 @@ export default {
 </script>
 
 <style>
+#app {
+  /* width: 80%; */
+  padding: 10px;
+  margin: auto;
+}
 .md-app {
-  height: 100%;
+  margin-top: 10px;
   border: 1px solid rgba(#000, 0.12);
 }
 .md-drawer {
   width: 230px;
   max-width: calc(100vw - 125px);
 }
-.button
-{
+.button {
   width: 600px;
+  text-align: center;
+  margin: auto;
 }
 .list-demo {
   vertical-align: top;
   height: auto;
 }
-
+ul
+{
+  text-align: center;
+}
 .list-item {
   display: inline-block;
   margin-right: 10px;
