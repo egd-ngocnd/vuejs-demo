@@ -1,10 +1,13 @@
 <template>
   <div id="app">
-    <button v-on:click="add">Add</button>
-    <button v-on:click="remove">Remove</button>
-    <button v-on:click="randomAdd">RandomAdd</button>
-    <button v-on:click="sort(1)">Bubble Sort</button>
-    <button v-on:click="sort(2)">Selection Sort</button>
+    <div class="button">
+      <button :disabled="isLock" v-on:click="add">Add</button>
+      <button :disabled="isLock" v-on:click="remove">Remove</button>
+      <button :disabled="isLock" v-on:click="randomAdd">RandomAdd</button>
+      <button :disabled="isLock" v-on:click="sort(1)">Bubble Sort</button>
+      <button :disabled="isLock" v-on:click="sort(2)">Selection Sort</button>
+      <button :disabled="isLock" v-on:click="sort(3)">Insertion Sort</button>
+    </div>
     <transition-group name="list" tag="p">
       <p
         v-for="item in items"
@@ -25,7 +28,14 @@ export default {
     return {
       items: [1, 2, 3, 4, 5],
       nextNum: 6,
+      isLock: false,
+      intTime: 1000,
     };
+  },
+  computed: {
+    isDisabled: function () {
+      return this.isLock;
+    },
   },
   methods: {
     randomIndex: function () {
@@ -38,49 +48,65 @@ export default {
       this.items.splice(this.randomIndex(), 1);
     },
     randomAdd: function () {
-      var that = this;
-      var evtInterval = setInterval(function () {
+      let that = this;
+      let intTime = this.intTime;
+      let i;
+      //this.isLock = true;
+      async function add() {
+        alert("START");
         that.items.splice(that.randomIndex(), 0, that.nextNum++);
-        if (that.items.length === 10) {
-          clearInterval(evtInterval);
+        for (i = 1; i < 5; i++) {
+          let promise = new Promise((resolve, reject) => {
+            setTimeout(function () {
+              that.items.splice(that.randomIndex(), 0, that.nextNum++);
+              resolve("done!");
+            }, intTime);
+          });
+          await promise;
         }
-      }, 1000);
+        setTimeout(function () {
+          alert("END");
+        }, intTime);
+        //this.isLock = false;
+      }
+      add();
     },
     sort: function (intType) {
-      var that = this;
+      let that = this;
+      let intTime = this.intTime;
       async function BubbleSort() {
-        var i, j;
-        var n = that.items.length;
+        let i, j;
+        let n = that.items.length;
         alert("START");
         for (i = 0; i < n - 1; i++) {
           for (j = 0; j < n - i - 1; j++) {
             if (that.items[j] > that.items[j + 1]) {
-              var a, b;
+              let a, b;
               a = that.items[j];
               b = that.items[j + 1];
-              let promise1 = new Promise((resolve, reject) => {
+              let promise = new Promise((resolve, reject) => {
                 setTimeout(function () {
                   that.items.splice(j, 1);
                   that.items.splice(j, 1);
-                }, 500);
+                }, intTime / 2);
                 setTimeout(function () {
                   that.items.splice(j, 0, b);
                   that.items.splice(j + 1, 0, a);
-                  resolve("done2");
-                }, 1000);
+                  resolve("done!");
+                }, intTime);
               });
-              await promise1;
+              await promise;
             }
           }
         }
         setTimeout(function () {
           alert("END");
-        }, 500);
+        }, intTime);
       }
       async function SelectionSort() {
-        var i, j;
-        var min_idx = 0;
-        var n = that.items.length;
+        let i, j;
+        let min_idx = 0;
+        let n = that.items.length;
         alert("START");
         for (i = 0; i < n - 1; i++) {
           min_idx = i;
@@ -92,31 +118,67 @@ export default {
           if (min_idx === i) {
             continue;
           }
-          var a, b;
+          let a, b;
           a = that.items[i];
           b = that.items[min_idx];
           let promise = new Promise((resolve, reject) => {
             setTimeout(function () {
               that.items.splice(min_idx, 1);
               that.items.splice(i, 1);
-            }, 500);
+            }, intTime / 2);
             setTimeout(function () {
               that.items.splice(i, 0, b);
               that.items.splice(min_idx, 0, a);
               resolve("done2");
-            }, 1000);
+            }, intTime);
           });
           await promise;
         }
         setTimeout(function () {
           alert("END");
-        }, 500);
+        }, intTime);
       }
-      if (intType === 1) {
-        BubbleSort();
+      async function InsertionSort() {
+        let i, j;
+        let n = that.items.length;
+        alert("START");
+        for (i = 0; i < n - 1; i++) {
+          for (j = 0; j < n - i - 1; j++) {
+            if (that.items[j] > that.items[j + 1]) {
+              let a, b;
+              a = that.items[j];
+              b = that.items[j + 1];
+              let promise = new Promise((resolve, reject) => {
+                setTimeout(function () {
+                  that.items.splice(j, 1);
+                  that.items.splice(j, 1);
+                }, intTime / 2);
+                setTimeout(function () {
+                  that.items.splice(j, 0, b);
+                  that.items.splice(j + 1, 0, a);
+                  resolve("done!");
+                }, intTime);
+              });
+              await promise;
+            }
+          }
+        }
+        setTimeout(function () {
+          alert("END");
+        }, intTime);
       }
-      if (intType === 2) {
-        SelectionSort();
+      switch (intType) {
+        case 1:
+          BubbleSort();
+          break;
+        case 2:
+          SelectionSort();
+          break;
+        case 3:
+          InsertionSort();
+          break;
+        default:
+          break;
       }
     },
   },
