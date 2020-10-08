@@ -1,23 +1,89 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
 <template>
   <div id="app">
-    <div>
-      <button :disabled="checkLock" v-on:click="add">Add</button>
-      <button :disabled="checkLock" v-on:click="remove">Remove</button>
-      <button :disabled="checkLock" v-on:click="randomAdd">RandomAdd</button>
-      <button :disabled="checkLock" v-on:click="sort(1)">Bubble Sort</button>
-      <button :disabled="checkLock" v-on:click="sort(2)">Selection Sort</button>
+    <div class="page-container">
+      <md-app md-waterfall md-mode="fixed">
+        <md-app-toolbar class="md-primary">
+          <span class="md-title">My Title</span>
+        </md-app-toolbar>
+
+        <md-app-drawer md-permanent="full">
+          <md-toolbar class="md-transparent" md-elevation="0">
+            Navigation
+          </md-toolbar>
+
+          <md-list>
+            <md-list-item>
+              <md-icon>move_to_inbox</md-icon>
+              <span class="md-list-item-text">Inbox</span>
+            </md-list-item>
+
+            <md-list-item>
+              <md-icon>send</md-icon>
+              <span class="md-list-item-text">Sent Mail</span>
+            </md-list-item>
+
+            <md-list-item>
+              <md-icon>delete</md-icon>
+              <span class="md-list-item-text">Trash</span>
+            </md-list-item>
+
+            <md-list-item>
+              <md-icon>error</md-icon>
+              <span class="md-list-item-text">Spam</span>
+            </md-list-item>
+          </md-list>
+        </md-app-drawer>
+
+        <md-app-content>
+          <div class="button">
+            <md-button
+              class="md-raised md-primary"
+              :disabled="checkLock"
+              v-on:click="add"
+              >Add</md-button
+            >
+            <md-button
+              class="md-raised md-accent"
+              :disabled="checkLock"
+              v-on:click="remove"
+              >Remove</md-button
+            >
+            <md-button
+              class="md-raised md-primary"
+              :disabled="checkLock"
+              v-on:click="randomAdd"
+              >Random Add</md-button
+            >
+            <md-button
+              class="md-raised md-primary"
+              :disabled="checkLock"
+              v-on:click="sort(1)"
+              >Bubble Sort</md-button
+            >
+            <md-button
+              class="md-raised md-primary"
+              :disabled="checkLock"
+              v-on:click="sort(2)"
+              >Selection Sort</md-button
+            >
+          <div v-show="checkLock">
+            <md-progress-bar md-mode="indeterminate"></md-progress-bar>
+          </div>
+          </div>
+          <transition-group name="list" tag="p">
+            <p
+              v-for="item in items"
+              v-bind:key="item"
+              class="list-item"
+              v-bind:style="{ height: 20 * item + 'px' }"
+            >
+              {{ item }}
+            </p>
+          </transition-group>
+        </md-app-content>
+      </md-app>
     </div>
-    <transition-group name="list" tag="p">
-      <p
-        v-for="item in items"
-        v-bind:key="item"
-        class="list-item"
-        v-bind:style="{ height: 20 * item + 'px' }"
-      >
-        {{ item }}
-      </p>
-    </transition-group>
   </div>
 </template>
 
@@ -42,10 +108,14 @@ export default {
       return Math.floor(Math.random() * this.items.length);
     },
     add: function () {
+      this.isLock = true;
       this.items.splice(this.randomIndex(), 0, this.nextNum++);
+      this.isLock = false;
     },
     remove: function () {
+      this.isLock = true;
       this.items.splice(this.randomIndex(), 1);
+      this.isLock = false;
     },
     randomAdd: function () {
       var that = this;
@@ -62,7 +132,7 @@ export default {
         }
         setTimeout(function () {
           that.isLock = false;
-        },that.intDelay);
+        }, that.intDelay);
       }
       bulkAdd();
     },
@@ -72,7 +142,6 @@ export default {
       async function BubbleSort() {
         var i, j;
         var n = that.items.length;
-        alert("START");
         that.isLock = true;
         for (i = 0; i < n - 1; i++) {
           for (j = 0; j < n - i - 1; j++) {
@@ -96,7 +165,6 @@ export default {
           }
         }
         setTimeout(function () {
-          alert("END");
           that.isLock = false;
         }, intDelay / 2);
       }
@@ -104,7 +172,6 @@ export default {
         var i, j;
         var min_idx = 0;
         var n = that.items.length;
-        alert("START");
         that.isLock = true;
         for (i = 0; i < n - 1; i++) {
           min_idx = i;
@@ -133,7 +200,6 @@ export default {
           await promise;
         }
         setTimeout(function () {
-          alert("END");
           that.isLock = false;
         }, intDelay / 2);
       }
@@ -156,6 +222,18 @@ export default {
 </script>
 
 <style>
+.md-app {
+  height: 100%;
+  border: 1px solid rgba(#000, 0.12);
+}
+.md-drawer {
+  width: 230px;
+  max-width: calc(100vw - 125px);
+}
+.button
+{
+  width: 600px;
+}
 .list-demo {
   vertical-align: top;
   height: auto;
