@@ -17,6 +17,7 @@ yarn install
 yarn serve
 ```
 ## Features
+### Sorting-algorithms
 * [x] [Selection Sort](https://www.geeksforgeeks.org/selection-sort/)
 * [x] [Bubble Sort](https://www.geeksforgeeks.org/bubble-sort/)
 * [ ] [Recursive Bubble Sort](https://www.geeksforgeeks.org/recursive-bubble-sort/)
@@ -55,6 +56,18 @@ yarn serve
 * [ ] [Merge Sort for Linked Lists](https://www.geeksforgeeks.org/merge-sort-for-linked-list/)
 * [ ] [Merge Sort for Doubly Linked List](https://www.geeksforgeeks.org/merge-sort-for-doubly-linked-list/)
 * [ ] [3-way Merge Sort](https://www.geeksforgeeks.org/3-way-merge-sort/)
+### Searching Algorithms
+* [ ] [Linear Search](https://www.geeksforgeeks.org/linear-search/)
+* [ ] [Binary Search](https://www.geeksforgeeks.org/binary-search/)
+* [ ] [Jump Search](https://www.geeksforgeeks.org/jump-search/)
+* [ ] [Interpolation Search](https://www.geeksforgeeks.org/interpolation-search/)
+* [ ] [Exponential Search](https://www.geeksforgeeks.org/exponential-search/)
+* [ ] [Sublist Search (Search a linked list in another list)](https://www.geeksforgeeks.org/sublist-search-search-a-linked-list-in-another-list/)
+* [ ] [Fibonacci Search](https://www.geeksforgeeks.org/fibonacci-search/)
+* [ ] [The Ubiquitous Binary Search](https://www.geeksforgeeks.org/the-ubiquitous-binary-search-set-1/)
+* [ ] [Recursive program to linearly search an element in a given array](https://www.geeksforgeeks.org/recursive-c-program-linearly-search-element-given-array/)
+* [ ] [Recursive function to do substring search](https://www.geeksforgeeks.org/recursive-function-to-do-substring-search/)
+* [ ] [Unbounded Binary Search Example (Find the point where a monotonically increasing function becomes positive first time)](https://www.geeksforgeeks.org/find-the-point-where-a-function-becomes-negative/)
 ## Deloy github pages
 ```
 set -e
@@ -83,6 +96,6 @@ cd -
 ## Clone code
 ```javascript
 $(".algo").find("li").each(function(){
-    console.log("[" + $(this).text() + "](" + $(this).find("a").attr("href") + ")")
+    console.log("* [ ] [" + $(this).text() + "](" + $(this).find("a").attr("href") + ")")
 });
 ```
