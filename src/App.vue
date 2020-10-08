@@ -2,11 +2,11 @@
 <template>
   <div id="app">
     <div>
-      <button :disabled="isLock" v-on:click="add">Add</button>
-      <button :disabled="isLock" v-on:click="remove">Remove</button>
-      <button :disabled="isLock" v-on:click="randomAdd">RandomAdd</button>
-      <button :disabled="isLock" v-on:click="sort(1)">Bubble Sort</button>
-      <button :disabled="isLock" v-on:click="sort(2)">Selection Sort</button>
+      <button :disabled="checkLock" v-on:click="add">Add</button>
+      <button :disabled="checkLock" v-on:click="remove">Remove</button>
+      <button :disabled="checkLock" v-on:click="randomAdd">RandomAdd</button>
+      <button :disabled="checkLock" v-on:click="sort(1)">Bubble Sort</button>
+      <button :disabled="checkLock" v-on:click="sort(2)">Selection Sort</button>
     </div>
     <transition-group name="list" tag="p">
       <p
@@ -29,8 +29,13 @@ export default {
       items: [1, 2, 3, 4, 5],
       nextNum: 6,
       intDelay: 1000,
-      isLock:false,
+      isLock: false,
     };
+  },
+  computed: {
+    checkLock: function () {
+      return this.isLock;
+    },
   },
   methods: {
     randomIndex: function () {
@@ -44,9 +49,9 @@ export default {
     },
     randomAdd: function () {
       var that = this;
-      async function bulkAdd(){
+      async function bulkAdd() {
         that.isLock = true;
-        for(let idx = 0; idx < 5;idx++){
+        for (let idx = 0; idx < 5; idx++) {
           let promise = new Promise((resolve) => {
             setTimeout(function () {
               that.items.splice(that.randomIndex(), 0, that.nextNum++);
@@ -55,7 +60,9 @@ export default {
           });
           await promise;
         }
-        that.isLock = false;
+        setTimeout(function () {
+          that.isLock = false;
+        },that.intDelay);
       }
       bulkAdd();
     },
@@ -73,7 +80,7 @@ export default {
               var a, b;
               a = that.items[j];
               b = that.items[j + 1];
-              let promise1 = new Promise((resolve) => {
+              let promise = new Promise((resolve) => {
                 setTimeout(function () {
                   that.items.splice(j, 1);
                   that.items.splice(j, 1);
@@ -84,7 +91,7 @@ export default {
                   resolve("done2");
                 }, intDelay);
               });
-              await promise1;
+              await promise;
             }
           }
         }
