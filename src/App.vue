@@ -25,6 +25,7 @@ export default {
     return {
       items: [1, 2, 3, 4, 5],
       nextNum: 6,
+      intDelay:1000
     };
   },
   methods: {
@@ -48,6 +49,7 @@ export default {
     },
     sort: function (intType) {
       var that = this;
+      var intDelay = this.intDelay;
       async function BubbleSort() {
         var i, j;
         var n = that.items.length;
@@ -62,12 +64,12 @@ export default {
                 setTimeout(function () {
                   that.items.splice(j, 1);
                   that.items.splice(j, 1);
-                }, 500);
+                }, intDelay/2);
                 setTimeout(function () {
                   that.items.splice(j, 0, b);
                   that.items.splice(j + 1, 0, a);
                   resolve("done2");
-                }, 1000);
+                }, intDelay);
               });
               await promise1;
             }
@@ -75,7 +77,7 @@ export default {
         }
         setTimeout(function () {
           alert("END");
-        }, 500);
+        }, intDelay/2);
       }
       async function SelectionSort() {
         var i, j;
@@ -99,24 +101,28 @@ export default {
             setTimeout(function () {
               that.items.splice(min_idx, 1);
               that.items.splice(i, 1);
-            }, 500);
+            }, intDelay/2);
             setTimeout(function () {
               that.items.splice(i, 0, b);
               that.items.splice(min_idx, 0, a);
               resolve("done2");
-            }, 1000);
+            }, intDelay);
           });
           await promise;
         }
         setTimeout(function () {
           alert("END");
-        }, 500);
+        }, intDelay/2);
       }
-      if (intType === 1) {
-        BubbleSort();
-      }
-      if (intType === 2) {
-        SelectionSort();
+      switch(intType){
+        case 1:
+          BubbleSort();
+          break;
+        case 2:
+          SelectionSort();
+          break;
+        default:
+          break;
       }
     },
   },
