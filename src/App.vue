@@ -58,7 +58,7 @@ export default {
               var a, b;
               a = that.items[j];
               b = that.items[j + 1];
-              let promise1 = new Promise((resolve, reject) => {
+              let promise1 = new Promise((resolve) => {
                 setTimeout(function () {
                   that.items.splice(j, 1);
                   that.items.splice(j, 1);
@@ -95,7 +95,7 @@ export default {
           var a, b;
           a = that.items[i];
           b = that.items[min_idx];
-          let promise = new Promise((resolve, reject) => {
+          let promise = new Promise((resolve) => {
             setTimeout(function () {
               that.items.splice(min_idx, 1);
               that.items.splice(i, 1);
