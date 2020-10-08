@@ -97,8 +97,8 @@ export default {
           b = that.items[min_idx];
           let promise = new Promise((resolve, reject) => {
             setTimeout(function () {
+              that.items.splice(min_idx, 1);
               that.items.splice(i, 1);
-              that.items.splice(min_idx - 1, 1);
             }, 500);
             setTimeout(function () {
               that.items.splice(i, 0, b);
