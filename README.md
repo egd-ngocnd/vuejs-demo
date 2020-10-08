@@ -82,5 +82,7 @@ cd -
 ```
 ## Clone code
 ```javascript
-$(".algo").find("ul").find("li").each(function(){console.log("[" + $(this).text() + "](" + $(this).find("a").attr("href") + ")")});
+$(".algo").find("li").each(function(){
+    console.log("[" + $(this).text() + "](" + $(this).find("a").attr("href") + ")")
+});
 ```
