@@ -14,8 +14,6 @@ npm run serve
 Or use yarn
 ```shell
 yarn install
-yarn serve
-```
 ## Features
 ### Sorting-algorithms
 * [x] [Selection Sort](https://www.geeksforgeeks.org/selection-sort/)
