@@ -1,50 +1,181 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
 <template>
   <div>
-    <md-tabs md-sync-route>
-      <md-tab
-        id="tab-home"
-        md-label="Home"
-        to="/components/tabs"
-        exact
-      ></md-tab>
-      <md-tab id="tab-pages" md-label="Pages" to="/components/tabs/pages">
-        <md-list>
-          <md-list-item to="/components/tabs/pages/1"
-            >Go to Subpage 1</md-list-item
-          >
-          <md-list-item to="/components/tabs/pages/2"
-            >Go to Subpage 2</md-list-item
-          >
-        </md-list>
-      </md-tab>
-      <md-tab
-        id="tab-posts"
-        md-label="Posts"
-        to="/components/tabs/posts"
-      ></md-tab>
-      <md-tab
-        id="tab-favorites"
-        md-label="Favorites"
-        to="/components/tabs/favorites"
-      ></md-tab>
-      <md-tab id="tab-disabled" md-label="Disabled" md-disabled></md-tab>
-    </md-tabs>
-    <h2>Mirror Subpage</h2>
-    <md-tabs>
-      <md-tab id="tab-pages-1" md-label="Pages 1" to="/components/tabs/pages/1"
-        >Subpage 1</md-tab
+    <div class="button">
+      <md-button
+        class="md-raised md-primary"
+        :disabled="checkLock"
+        v-on:click="add"
+        >Add</md-button
       >
-      <md-tab id="tab-pages-2" md-label="Pages 2" to="/components/tabs/pages/2"
-        >Subpage 2</md-tab
+      <md-button
+        class="md-raised md-accent"
+        :disabled="checkLock"
+        v-on:click="remove"
+        >Remove</md-button
       >
-    </md-tabs>
+      <md-button
+        class="md-raised md-primary"
+        :disabled="checkLock"
+        v-on:click="randomAdd(5)"
+        >Random Add</md-button
+      >
+      <md-button
+        class="md-raised md-primary"
+        :disabled="checkLock"
+        v-on:click="insertionSort"
+        >Insertion Sort</md-button
+      >
+      <div v-show="checkLock">
+        <md-progress-bar md-mode="indeterminate"></md-progress-bar>
+      </div>
+    </div>
+    <transition-group name="list" tag="ul">
+      <li
+        v-for="item in items"
+        v-bind:key="item"
+        class="list-item"
+        v-bind:style="{ height: 20 * item + 'px' }"
+      >
+        {{ item }}
+      </li>
+    </transition-group>
   </div>
 </template>
 <script>
 export default {
   name: "Sorting2",
-  props: {
-    msg: String,
+  data() {
+    return {
+      items: [1, 2, 3, 4, 5],
+      nextNum: 6,
+      intDelay: 1000,
+      isLock: false,
+      intMax: 30,
+    };
   },
+  beforeRouteEnter(to, from, next) {
+    next();
+  },
+  computed: {
+    checkLock: function () {
+      return this.isLock;
+    },
+  },
+  methods: {
+    randomIndex: function () {
+      return Math.floor(Math.random() * this.items.length);
+    },
+    add: function () {
+      if (this.items.length > this.intMax) {
+        return;
+      }
+      this.isLock = true;
+      this.items.splice(this.randomIndex(), 0, this.nextNum++);
+      this.isLock = false;
+    },
+    remove: function () {
+      if(this.items.length == 0){
+        return;
+      }
+      this.isLock = true;
+      this.items.splice(this.randomIndex(), 1);
+      this.isLock = false;
+    },
+    randomAdd: function (intSize) {
+      if (this.items.length > this.intMax - intSize) {
+        return;
+      }
+      var that = this;
+      async function bulkAdd() {
+        that.isLock = true;
+        for (let idx = 0; idx < intSize; idx++) {
+          let promise = new Promise((resolve) => {
+            setTimeout(function () {
+              that.items.splice(that.randomIndex(), 0, that.nextNum++);
+              resolve("done");
+            }, that.intDelay);
+          });
+          await promise;
+        }
+        setTimeout(function () {
+          that.isLock = false;
+        }, that.intDelay);
+      }
+      bulkAdd();
+    },
+    insertionSort: function (intType) {
+      var that = this;
+      var intDelay = this.intDelay;
+      async function InsertionSort() {
+        var i, j, a, b;
+        var n = that.items.length;
+        that.isLock = true;
+        for (i = 1; i < n ; i++) {
+          j = i;
+          a = that.items[j];
+          b = that.items[j-1];
+          while(j >= 0 && that.items[j-1] > that.items[j])
+          {
+            a = that.items[j];
+            b = that.items[j-1];
+            let promise = new Promise((resolve) => {
+              setTimeout(function () {
+                that.items.splice(j, 1);
+                that.items.splice(j-1, 1);
+              }, intDelay / 2);
+
+              setTimeout(function () {
+                that.items.splice(j-1, 0, a);
+                that.items.splice(j, 0, b);
+                resolve("done!");
+              }, intDelay);
+            });
+            await promise;
+            j = j - 1;
+          }
+        }
+        setTimeout(function () {
+          that.isLock = false;
+        }, intDelay / 2);
+      }
+
+      InsertionSort();
+    }
+  }
 };
 </script>
+<style>
+.button {
+  width: 600px;
+  text-align: center;
+  margin: auto;
+}
+.list-demo {
+  vertical-align: top;
+  height: auto;
+}
+ul {
+  text-align: center;
+}
+.list-item {
+  display: inline-block;
+  margin-right: 10px;
+  background-color: red;
+  width: 25px;
+  text-align: center;
+}
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 1000ms;
+}
+
+.list-enter,
+.list-leave-to
+
+/* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
+}
+</style>

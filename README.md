@@ -20,7 +20,7 @@ yarn install
 * [x] [Selection Sort](https://www.geeksforgeeks.org/selection-sort/)
 * [x] [Bubble Sort](https://www.geeksforgeeks.org/bubble-sort/)
 * [ ] [Recursive Bubble Sort](https://www.geeksforgeeks.org/recursive-bubble-sort/)
-* [ ] [Insertion Sort](https://www.geeksforgeeks.org/insertion-sort/)
+* [x] [Insertion Sort](https://www.geeksforgeeks.org/insertion-sort/)
 * [ ] [Recursive Insertion Sort](https://www.geeksforgeeks.org/recursive-insertion-sort/)
 * [ ] [Merge Sort](https://www.geeksforgeeks.org/merge-sort/)
 * [ ] [Iterative Merge Sort](https://www.geeksforgeeks.org/iterative-merge-sort/)
