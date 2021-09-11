@@ -5,32 +5,38 @@
       <md-button
         class="md-raised md-primary"
         :disabled="checkLock"
-        v-on:click="add"
+        v-on:click="Add"
         >Add</md-button
       >
       <md-button
         class="md-raised md-accent"
         :disabled="checkLock"
-        v-on:click="remove"
+        v-on:click="Remove"
         >Remove</md-button
       >
       <md-button
         class="md-raised md-primary"
         :disabled="checkLock"
-        v-on:click="randomAdd(5)"
+        v-on:click="RandomAdd(5)"
         >Random Add</md-button
       >
       <md-button
         class="md-raised md-primary"
         :disabled="checkLock"
-        v-on:click="sort(1)"
+        v-on:click="Sort(1)"
         >Bubble Sort</md-button
       >
       <md-button
         class="md-raised md-primary"
         :disabled="checkLock"
-        v-on:click="sort(2)"
+        v-on:click="Sort(2)"
         >Selection Sort</md-button
+      >
+      <md-button
+        class="md-raised md-primary"
+        :disabled="checkLock"
+        v-on:click="Sort(3)"
+        >Quick Sort</md-button
       >
       <div v-show="checkLock">
         <md-progress-bar md-mode="indeterminate"></md-progress-bar>
@@ -72,7 +78,77 @@ export default {
     randomIndex: function () {
       return Math.floor(Math.random() * this.items.length);
     },
-    add: function () {
+    swap: async function(i,j){
+      var a, b;
+      var that = this;
+      a = that.items[i];
+      b = that.items[j];
+      return new Promise((resolve) => {
+        setTimeout(function () {
+          that.items.splice(j, 1);
+          that.items.splice(i, 1);
+        }, that.intDelay / 2);
+        setTimeout(function () {
+          that.items.splice(i, 0, b);
+          that.items.splice(j, 0, a);
+          resolve("done2");
+        }, that.intDelay);
+      });
+    },
+    bubbleSort: async function () {
+      var i, j;
+      var that = this;
+      var n = that.items.length;
+      for (i = 0; i < n - 1; i++) {
+        for (j = 0; j < n - i - 1; j++) {
+          if (that.items[j] > that.items[j + 1]) {
+            await that.swap(j,j+1);
+          }
+        }
+      }
+    },
+    selectionSort: async function() {
+      var i, j;
+      var min_idx = 0;
+      var that = this;
+      var n = that.items.length;
+      for (i = 0; i < n - 1; i++) {
+        min_idx = i;
+        for (j = i + 1; j < n; j++) {
+          if (that.items[min_idx] > that.items[j]) {
+            min_idx = j;
+          }
+        }
+        if (min_idx === i) {
+          continue;
+        }
+        await that.swap(i,min_idx);
+      }
+    },
+    partition: async function(low,high){
+      var pivot = this.items[high];
+      var i = (low-1);
+      var j = 0;
+      for (j = low; j <= high - 1; j++) 
+      { 
+          // If current element is smaller than the pivot 
+          if (this.items[j] < pivot) 
+          { 
+              i++; // increment index of smaller element 
+              await this.swap(i, j); 
+          } 
+      } 
+      await this.swap(i + 1, high); 
+      return (i + 1); 
+    },
+    quickSort: async function(low,high) {
+      if(low < high){
+        var pi = await this.partition(low, high);
+        this.quickSort(low,pi-1);
+        this.quickSort(pi + 1,high); 
+      }
+    },
+    Add: function () {
       if (this.items.length > this.intMax) {
         return;
       }
@@ -80,7 +156,23 @@ export default {
       this.items.splice(this.randomIndex(), 0, this.nextNum++);
       this.isLock = false;
     },
-    remove: function () {
+    bulkAdd: async function(intSize) {
+      var that = this;
+      that.isLock = true;
+      for (let idx = 0; idx < intSize; idx++) {
+        let promise = new Promise((resolve) => {
+          setTimeout(function () {
+            that.items.splice(that.randomIndex(), 0, that.nextNum++);
+            resolve("done");
+          }, that.intDelay);
+        });
+        await promise;
+      }
+      setTimeout(function () {
+        that.isLock = false;
+      }, that.intDelay);
+    },
+    Remove: function () {
       if(this.items.length == 0){
         return;
       }
@@ -88,105 +180,31 @@ export default {
       this.items.splice(this.randomIndex(), 1);
       this.isLock = false;
     },
-    randomAdd: function (intSize) {
+    RandomAdd: function (intSize) {
       if (this.items.length > this.intMax - intSize) {
         return;
       }
-      var that = this;
-      async function bulkAdd() {
-        that.isLock = true;
-        for (let idx = 0; idx < intSize; idx++) {
-          let promise = new Promise((resolve) => {
-            setTimeout(function () {
-              that.items.splice(that.randomIndex(), 0, that.nextNum++);
-              resolve("done");
-            }, that.intDelay);
-          });
-          await promise;
-        }
-        setTimeout(function () {
-          that.isLock = false;
-        }, that.intDelay);
-      }
-      bulkAdd();
+      this.bulkAdd(intSize);
     },
-    sort: function (intType) {
-      var that = this;
-      var intDelay = this.intDelay;
-      async function BubbleSort() {
-        var i, j;
-        var n = that.items.length;
-        that.isLock = true;
-        for (i = 0; i < n - 1; i++) {
-          for (j = 0; j < n - i - 1; j++) {
-            if (that.items[j] > that.items[j + 1]) {
-              var a, b;
-              a = that.items[j];
-              b = that.items[j + 1];
-              let promise = new Promise((resolve) => {
-                setTimeout(function () {
-                  that.items.splice(j, 1);
-                  that.items.splice(j, 1);
-                }, intDelay / 2);
-                setTimeout(function () {
-                  that.items.splice(j, 0, b);
-                  that.items.splice(j + 1, 0, a);
-                  resolve("done2");
-                }, intDelay);
-              });
-              await promise;
-            }
-          }
-        }
-        setTimeout(function () {
-          that.isLock = false;
-        }, intDelay / 2);
-      }
-      async function SelectionSort() {
-        var i, j;
-        var min_idx = 0;
-        var n = that.items.length;
-        that.isLock = true;
-        for (i = 0; i < n - 1; i++) {
-          min_idx = i;
-          for (j = i + 1; j < n; j++) {
-            if (that.items[min_idx] > that.items[j]) {
-              min_idx = j;
-            }
-          }
-          if (min_idx === i) {
-            continue;
-          }
-          var a, b;
-          a = that.items[i];
-          b = that.items[min_idx];
-          let promise = new Promise((resolve) => {
-            setTimeout(function () {
-              that.items.splice(min_idx, 1);
-              that.items.splice(i, 1);
-            }, intDelay / 2);
-            setTimeout(function () {
-              that.items.splice(i, 0, b);
-              that.items.splice(min_idx, 0, a);
-              resolve("done2");
-            }, intDelay);
-          });
-          await promise;
-        }
-        setTimeout(function () {
-          that.isLock = false;
-        }, intDelay / 2);
-      }
+    Sort: async function (intType) {
+      let that = this;
+      that.isLock = true;
       switch (intType) {
         case 1:
-          BubbleSort();
+          await that.bubbleSort();
           break;
         case 2:
-          SelectionSort();
+          await that.selectionSort();
+          break;
+        case 3:
+          await that.quickSort(0,that.items.length);
           break;
         default:
           break;
       }
+      setTimeout(function () {
+        that.isLock = false;
+      }, that.intDelay);
     },
   },
 };
