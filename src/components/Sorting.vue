@@ -128,17 +128,21 @@ export default {
     partition: async function(low,high){
       var pivot = this.items[high];
       var i = (low-1);
-      var j = 0;
+      var j = low;
       for (j = low; j <= high - 1; j++) 
       { 
           // If current element is smaller than the pivot 
-          if (this.items[j] < pivot) 
+          if (this.items[j] < pivot && this.items[i+1] != this.items[j]) 
           { 
               i++; // increment index of smaller element 
               await this.swap(i, j); 
+              console.log(1,i,j);
           } 
-      } 
-      await this.swap(i + 1, high); 
+      }
+      console.log(2,i,j);
+      if(this.items[i+1] != this.items[high]){
+        await this.swap(i + 1, high);
+      }
       return (i + 1); 
     },
     quickSort: async function(low,high) {
@@ -197,7 +201,7 @@ export default {
           await that.selectionSort();
           break;
         case 3:
-          await that.quickSort(0,that.items.length);
+          await that.quickSort(0,that.items.length - 1);
           break;
         default:
           break;
