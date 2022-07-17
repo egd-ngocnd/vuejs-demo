@@ -1,56 +1,35 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
-<template>
-  <div>
-    <div class="button">
-      <md-button
-        class="md-raised md-primary"
-        :disabled="checkLock"
-        v-on:click="add"
-        >Add</md-button
-      >
-      <md-button
-        class="md-raised md-accent"
-        :disabled="checkLock"
-        v-on:click="remove"
-        >Remove</md-button
-      >
-      <md-button
-        class="md-raised md-primary"
-        :disabled="checkLock"
-        v-on:click="randomAdd(5)"
-        >Random Add</md-button
-      >
-      <md-button
-        class="md-raised md-primary"
-        :disabled="checkLock"
-        v-on:click="sort(1)"
-        >Bubble Sort</md-button
-      >
-      <md-button
-        class="md-raised md-primary"
-        :disabled="checkLock"
-        v-on:click="sort(2)"
-        >Selection Sort</md-button
-      >
-      <div v-show="checkLock">
-        <md-progress-bar md-mode="indeterminate"></md-progress-bar>
-      </div>
-    </div>
-    <transition-group name="list" tag="ul">
-      <li
-        v-for="item in items"
-        v-bind:key="item"
-        class="list-item"
-        v-bind:style="{ height: 20 * item + 'px' }"
-      >
-        {{ item }}
-      </li>
-    </transition-group>
-  </div>
-</template>
-<script>
-export default {
+<script lang="ts">
+import { defineComponent,ref } from 'vue'
+import { NButton,NSpace } from 'naive-ui'
+import { useLoadingBar } from 'naive-ui'
+import AppProvider from './AppProvider.vue'
+
+export default defineComponent({
   name: "Sorting",
+  components : {
+    NButton,
+    NSpace,
+    AppProvider,
+  },
+  setup () {
+    const loadingBar = useLoadingBar()
+    const disabledRef = ref(true)
+    return {
+      disabled: disabledRef,
+      handleStart () {
+        loadingBar.start()
+        disabledRef.value = false
+      },
+      handleFinish () {
+        loadingBar.finish()
+        disabledRef.value = true
+      },
+      handleError () {
+        disabledRef.value = true
+        loadingBar.error()
+      }
+    }
+  },
   data() {
     return {
       items: [1, 2, 3, 4, 5],
@@ -60,16 +39,16 @@ export default {
       intMax: 30,
     };
   },
-  beforeRouteEnter(to, from, next) {
+  beforeRouteEnter(to : any, from : any, next : any) : void{
     next();
   },
   computed: {
-    checkLock: function () {
-      return this.isLock;
+    checkLock: function () : boolean {
+      return this.isLock
     },
   },
   methods: {
-    randomIndex: function () {
+    randomIndex: function () : number{
       return Math.floor(Math.random() * this.items.length);
     },
     add: function () {
@@ -88,12 +67,13 @@ export default {
       this.items.splice(this.randomIndex(), 1);
       this.isLock = false;
     },
-    randomAdd: function (intSize) {
+    randomAdd: function (intSize: number) {
       if (this.items.length > this.intMax - intSize) {
         return;
       }
       var that = this;
       async function bulkAdd() {
+        that.handleStart()
         that.isLock = true;
         for (let idx = 0; idx < intSize; idx++) {
           let promise = new Promise((resolve) => {
@@ -106,21 +86,23 @@ export default {
         }
         setTimeout(function () {
           that.isLock = false;
+          that.handleFinish();
         }, that.intDelay);
       }
       bulkAdd();
     },
-    sort: function (intType) {
-      var that = this;
-      var intDelay = this.intDelay;
+    sort: function (intType: number) {
+      let that = this;
+      let intDelay = this.intDelay;
       async function BubbleSort() {
-        var i, j;
-        var n = that.items.length;
+        let i : number, j : number;
+        let n = that.items.length;
+        that.handleStart();
         that.isLock = true;
         for (i = 0; i < n - 1; i++) {
           for (j = 0; j < n - i - 1; j++) {
             if (that.items[j] > that.items[j + 1]) {
-              var a, b;
+              let a : number, b : number;
               a = that.items[j];
               b = that.items[j + 1];
               let promise = new Promise((resolve) => {
@@ -140,13 +122,15 @@ export default {
         }
         setTimeout(function () {
           that.isLock = false;
+          that.handleFinish();
         }, intDelay / 2);
       }
       async function SelectionSort() {
-        var i, j;
+        let i : number, j : number;
         var min_idx = 0;
         var n = that.items.length;
         that.isLock = true;
+        that.handleStart();
         for (i = 0; i < n - 1; i++) {
           min_idx = i;
           for (j = i + 1; j < n; j++) {
@@ -157,7 +141,7 @@ export default {
           if (min_idx === i) {
             continue;
           }
-          var a, b;
+          let a : number, b : number;
           a = that.items[i];
           b = that.items[min_idx];
           let promise = new Promise((resolve) => {
@@ -175,6 +159,7 @@ export default {
         }
         setTimeout(function () {
           that.isLock = false;
+          that.handleFinish();
         }, intDelay / 2);
       }
       switch (intType) {
@@ -189,8 +174,58 @@ export default {
       }
     },
   },
-};
+});
 </script>
+<template>
+  <div>
+    <div class="button">
+      <n-space>
+        <n-button
+          type="primary"
+          :disabled="checkLock"
+          v-on:click="add"
+          >Add</n-button
+        >
+        <n-button
+          type="warning"
+          :disabled="checkLock"
+          v-on:click="remove"
+          >Remove</n-button
+        >
+        <n-button
+          type="primary"
+          :disabled="checkLock"
+          v-on:click="randomAdd(5)"
+          >Random Add</n-button
+        >
+        <n-button
+          type="primary"
+          :disabled="checkLock"
+          v-on:click="sort(1)"
+          >Bubble Sort</n-button
+        >
+        <n-button
+          type="primary"
+          :disabled="checkLock"
+          v-on:click="sort(2)"
+          >Selection Sort</n-button
+        >
+      </n-space>
+    </div>
+    <div style="height:10px">
+    </div>
+    <transition-group name="list" tag="ul">
+      <li
+        v-for="item in items"
+        v-bind:key="item"
+        class="list-item"
+        v-bind:style="{ height: 20 * item + 'px' }"
+      >
+        {{ item }}
+      </li>
+    </transition-group>
+  </div>
+</template>
 <style>
 .button {
   width: 600px;

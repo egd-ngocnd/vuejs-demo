@@ -1,85 +1,99 @@
-<template>
-  <div id="app">
-    <div class="page-container">
-      <md-app md-waterfall md-mode="fixed">
-        <md-app-toolbar class="md-primary">
-          <span class="md-title">Basic Sorting Algorithms</span>
-        </md-app-toolbar>
-        <md-app-drawer md-permanent="full">
-          <md-toolbar class="md-transparent" md-elevation="0">
-            Navigation
-          </md-toolbar>
-          <md-list>
-            <md-list-item to="/"
-              ><router-link to="/" tag="li" active-class="active" exact
-                >Basic Sorting</router-link
-              ></md-list-item
-            >
-            <md-list-item to="/menu2"
-              ><router-link to="/menu2" tag="li" active-class="active"
-                >Sorting 2</router-link
-              ></md-list-item
-            >
-            <md-list-item to="/menu3"
-              ><router-link to="/menu3" tag="li" active-class="active"
-                >Menu 3</router-link
-              ></md-list-item
-            >
-            <md-list-item to="/menu4"
-              ><router-link to="/menu4" tag="li" active-class="active"
-                >Menu 4</router-link
-              ></md-list-item
-            >
-            <md-list-item tag="li" active-class="active"
-              ><iframe
-                src="https://www.facebook.com/plugins/share_button.php?href=https://egd-ngocnd.github.io/vuejs-demo"
-                width="119"
-                height="20"
-                style="border: none; overflow: hidden"
-                scrolling="no"
-                frameborder="0"
-                allowTransparency="true"
-                allow="encrypted-media"
-              ></iframe
-            ></md-list-item>
-            <md-list-item><a href="https://github.com/egd-ngocnd/vuejs-demo" target="_blank">Github Reponsitory</a></md-list-item
-            >
-          </md-list>
-        </md-app-drawer>
-        <md-app-content>
-          <router-view></router-view>
-        </md-app-content>
-      </md-app>
-    </div>
-  </div>
-</template>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { RouterLink, RouterView } from 'vue-router'
+import HelloWorld from './components/HelloWorld.vue'
+import AppProvider from './components/AppProvider.vue'
 
-<script>
-export default {
-  name: "App",
-  components: {},
-  data() {
-    return {
-      isLoading: false,
-    };
+export default defineComponent({
+  name: 'App',
+  components: {
+    AppProvider,
+    RouterLink,
+    RouterView,
+    HelloWorld,
   },
-  computed: {},
-  methods: {},
-};
+});
 </script>
 
-<style>
-#app {
-  /* width: 80%; */
-  padding: 10px;
-  margin: auto;
+<template>
+  <header>
+    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+
+    <div class="wrapper">
+      <HelloWorld msg="You did it!" />
+
+      <nav>
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/sorting">Sorting</RouterLink>
+      </nav>
+    </div>
+  </header>
+  <AppProvider>
+    <RouterView />
+  </AppProvider>
+</template>
+
+<style scoped>
+header {
+  line-height: 1.5;
+  max-height: 100vh;
 }
-.md-app {
-  margin-top: 10px;
-  border: 1px solid rgba(#000, 0.12);
+
+.logo {
+  display: block;
+  margin: 0 auto 2rem;
 }
-.md-drawer {
-  width: 230px;
-  max-width: calc(100vw - 125px);
+
+nav {
+  width: 100%;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+nav a.router-link-exact-active {
+  color: var(--color-text);
+}
+
+nav a.router-link-exact-active:hover {
+  background-color: transparent;
+}
+
+nav a {
+  display: inline-block;
+  padding: 0 1rem;
+  border-left: 1px solid var(--color-border);
+}
+
+nav a:first-of-type {
+  border: 0;
+}
+
+@media (min-width: 1024px) {
+  header {
+    display: flex;
+    place-items: center;
+    padding-right: calc(var(--section-gap) / 2);
+  }
+
+  .logo {
+    margin: 0 2rem 0 0;
+  }
+
+  header .wrapper {
+    display: flex;
+    place-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  nav {
+    text-align: left;
+    margin-left: -1rem;
+    font-size: 1rem;
+
+    padding: 1rem 0;
+    margin-top: 1rem;
+  }
 }
 </style>
