@@ -58,7 +58,7 @@ npm run test:e2e # or `npm run test:e2e:ci` for headless testing
 npm run lint
 ```
 ## VueJS Demo
-Show Demo on [VueJS Demo](https://egd-ngocnd.github.io/vuejs-demo/)
+Show Demo on [VueJS Demo](https://hblab-ngocnd.github.io/vuejs-demo/)
 > Project implement Basic Sorting Algorithms
 
 ## Features
