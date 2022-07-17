@@ -13,7 +13,7 @@ jobs:
 
       - name: Buid
         run: |
-          npm i @vue/cli-service
+          npm install vite
           npm run build 
 
       - name: Deploy to GitHub Pages
